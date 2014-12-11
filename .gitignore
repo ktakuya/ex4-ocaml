@@ -1,0 +1,21 @@
+# Created by https://www.gitignore.io
+
+### OCaml ###
+*.annot
+*.cmo
+*.cma
+*.cmi
+*.a
+*.o
+*.cmx
+*.cmxs
+*.cmxa
+
+### interpreter
+.depend
+parser.ml
+parser.mli
+parser.output
+lexer.ml
+miniml
+
