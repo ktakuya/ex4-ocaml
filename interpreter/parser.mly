@@ -3,7 +3,7 @@ open Syntax
 %}
 
 %token LPAREN RPAREN SEMISEMI
-%token PLUS MULT LT
+%token PLUS MULT LT LOGAND LOGOR
 %token IF THEN ELSE TRUE FALSE
 
 %token <int> INTV
@@ -18,8 +18,13 @@ toplevel :
 
 Expr :
     IfExpr { $1 }
-  | LTExpr { $1 }
+  | LOGExpr { $1 }
   | { ErrorExp ("Syntax Error") }
+
+LOGExpr :
+    LOGExpr LOGAND LOGExpr { BinOp (LogAnd, $1, $3) }
+  | LOGExpr LOGOR LOGExpr { BinOp (LogOr, $1, $3) }
+  | LTExpr { $1 }
 
 LTExpr : 
     PExpr LT PExpr { BinOp (Lt, $1, $3) }

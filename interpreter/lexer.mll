@@ -23,6 +23,9 @@ rule main = parse
 | "*" { Parser.MULT }
 | "<" { Parser.LT }
 
+| "&&" { Parser.LOGAND }
+| "||" { Parser.LOGOR }
+
 | ['a'-'z'] ['a'-'z' '0'-'9' '_' '\'']*
     { let id = Lexing.lexeme lexbuf in
       try 
