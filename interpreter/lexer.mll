@@ -30,6 +30,6 @@ rule main = parse
       with
       _ -> Parser.ID id
      }
-| eof { exit 0 }
+| eof { failwith "error" }
 
 

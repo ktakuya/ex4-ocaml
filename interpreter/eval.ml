@@ -7,7 +7,7 @@ and dnval = exval
 
 exception Error of string
 
-let err s = raise (Error s)
+let err s = (print_string s); print_newline(); failwith "error"
 
 (* pretty printing *)
 let rec string_of_exval = function
@@ -40,6 +40,7 @@ let rec eval_exp env = function
             BoolV true -> eval_exp env exp2 
           | BoolV false -> eval_exp env exp3
           | _ -> err ("Test expression must be boolean: if"))
+  | ErrorExp x -> err (x)
 
 let eval_decl env = function
     Exp e -> let v = eval_exp env e in ("-", env, v)

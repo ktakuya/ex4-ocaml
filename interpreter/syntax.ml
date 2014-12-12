@@ -9,6 +9,7 @@ type exp =
   | BLit of bool
   | BinOp of binOp * exp * exp
   | IfExp of exp * exp * exp
+  | ErrorExp of string
 
 type program = 
     Exp of exp
