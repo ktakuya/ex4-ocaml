@@ -6,6 +6,7 @@ open Syntax
 %token PLUS MULT LT LOGAND LOGOR
 %token IF THEN ELSE TRUE FALSE
 %token LET IN EQ
+%token RARROW FUN
 
 %token <int> INTV
 %token <Syntax.id> ID
@@ -22,7 +23,11 @@ Expr :
     IfExpr { $1 }
   | LetExpr { $1 }
   | LOGExpr { $1 }
+  | FunExpr { $1 }
   | { ErrorExp ("Syntax Error") }
+
+FunExpr :
+    FUN ID RARROW Expr { FunExp($2, $4) }
 
 LetExpr :
     LET ID EQ Expr IN Expr { LetExp ($2, $4, $6) }
@@ -43,9 +48,13 @@ PExpr :
   | {ErrorExp ("Unbound Error") }
 
 MExpr : 
-    MExpr MULT AExpr { BinOp (Mult, $1, $3) }
-  | AExpr { $1 }
+    MExpr MULT AppExpr { BinOp (Mult, $1, $3) }
+  | AppExpr { $1 }
   | { ErrorExp ("Unbound Error") }
+
+AppExpr :
+    AppExpr AExpr { AppExp($1, $2) }
+  | AExpr { $1 }
 
 AExpr :
     INTV { ILit $1 }

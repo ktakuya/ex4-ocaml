@@ -11,6 +11,8 @@ type exp =
   | IfExp of exp * exp * exp
   | LetExp of id * exp * exp
   | ErrorExp of string
+  | FunExp of id * exp
+  | AppExp of exp * exp
 
 type program = 
     Exp of exp
