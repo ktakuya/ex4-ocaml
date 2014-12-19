@@ -14,6 +14,7 @@ type exp =
   | FunExp of id * exp
   | AppExp of exp * exp
   | LetRecExp of id * id * exp * exp
+  | InfixExp of binOp
 
 type program = 
     Exp of exp

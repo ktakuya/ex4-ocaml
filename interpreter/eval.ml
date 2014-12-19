@@ -42,7 +42,7 @@ let rec eval_exp env = function
           let arg2 = eval_exp env exp2 in
             apply_prim op arg1 arg2
   | IfExp (exp1, exp2, exp3) ->
-      let test = eval_exp env exp1 in
+          let test = eval_exp env exp1 in
         (match test with
             BoolV true -> eval_exp env exp2 
           | BoolV false -> eval_exp env exp3
@@ -65,6 +65,13 @@ let rec eval_exp env = function
               Environment.extend id (ProcV (para, exp1, dummyenv)) env in
               dummyenv := newenv;
               eval_exp newenv exp2
+  | InfixExp (op) ->
+          (match op with
+             Plus -> ProcV("x", FunExp("y", BinOp(Plus, Var "x", Var "y")), ref env)
+           | Mult -> ProcV("x", FunExp("y", BinOp(Mult, Var "x", Var "y")), ref env)
+           | Lt -> ProcV("x", FunExp("y", BinOp(Lt, Var "x", Var "y")), ref env)
+           | LogAnd -> ProcV("x", FunExp("y", BinOp(LogAnd, Var "x", Var "y")), ref env)
+           | LogOr -> ProcV("x", FunExp("y", BinOp(LogOr, Var "x", Var "y")), ref env))
   | ErrorExp x -> err (x)
 
 let eval_decl env = function

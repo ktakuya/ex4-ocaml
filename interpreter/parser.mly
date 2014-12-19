@@ -67,8 +67,16 @@ AExpr :
   | TRUE { BLit true }
   | FALSE { BLit false }
   | ID { Var $1 }
+  | InfixExpr { $1 }
   | LPAREN Expr RPAREN { $2 }
   | { ErrorExp ("Unbound Error") }
+
+InfixExpr :
+    LPAREN PLUS RPAREN { InfixExp (Plus) }
+  | LPAREN MULT RPAREN { InfixExp (Mult) }
+  | LPAREN MULT RPAREN { InfixExp (Lt) }
+  | LPAREN LOGAND RPAREN { InfixExp (LogAnd) }
+  | LPAREN LOGOR RPAREN { InfixExp (LogOr) }
 
 IfExpr :
     IF Expr THEN Expr ELSE Expr { IfExp ($2, $4, $6) }
