@@ -33,7 +33,11 @@ LetRecExpr :
     LET REC ID EQ FUN ID RARROW Expr IN Expr { LetRecExp ($3, $6, $8, $10) }
 
 FunExpr :
-    FUN ID RARROW Expr { FunExp($2, $4) }
+    FUN FunExprArgumentList { $2 }
+
+FunExprArgumentList :
+    ID RARROW Expr { FunExp ($1, $3) }
+  | ID FunExprArgumentList { FunExp ($1, $2) } 
 
 LetExpr :
     LET ID EQ Expr IN Expr { LetExp ($2, $4, $6) }
