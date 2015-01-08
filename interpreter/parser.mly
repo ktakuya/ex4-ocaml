@@ -18,7 +18,7 @@ open Syntax
 
 toplevel :
     Expr SEMISEMI { Exp $1 }
-  | LET ID EQ Expr SEMISEMI { Decl ($2, $4) }
+  | LET ID LetExprArgumentList SEMISEMI { Decl ($2, $3) }
   | LET REC ID EQ FUN ID RARROW Expr SEMISEMI { RecDecl ($3, $6, $8) }
 
 Expr :
@@ -40,7 +40,11 @@ FunExprArgumentList :
   | ID FunExprArgumentList { FunExp ($1, $2) } 
 
 LetExpr :
-    LET ID EQ Expr IN Expr { LetExp ($2, $4, $6) }
+    LET ID LetExprArgumentList IN Expr { LetExp($2, $3, $5) }
+
+LetExprArgumentList :
+    ID EQ Expr { FunExp ($1, $3) }
+  | ID LetExprArgumentList { FunExp($1, $2) }
 
 LOGExpr :
     LOGExpr LOGAND LOGExpr { BinOp (LogAnd, $1, $3) }
