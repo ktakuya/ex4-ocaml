@@ -43,7 +43,8 @@ LetExpr :
     LET ID LetExprArgumentList IN Expr { LetExp($2, $3, $5) }
 
 LetExprArgumentList :
-    ID EQ Expr { FunExp ($1, $3) }
+
+    EQ Expr { $2 }
   | ID LetExprArgumentList { FunExp($1, $2) }
 
 LOGExpr :
