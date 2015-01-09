@@ -21,3 +21,10 @@ type program =
   | Decl of id * exp
   | RecDecl of id * id * exp
 
+type ty =
+    TyInt
+  | TyBool
+
+let pp_ty = function
+    TyInt -> print_string "int"
+  | TyBool -> print_string "bool"
