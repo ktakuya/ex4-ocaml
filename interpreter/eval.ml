@@ -66,12 +66,7 @@ let rec eval_exp env = function
               dummyenv := newenv;
               eval_exp newenv exp2
   | InfixExp (op) ->
-          (match op with
-             Plus -> ProcV("x", FunExp("y", BinOp(Plus, Var "x", Var "y")), ref env)
-           | Mult -> ProcV("x", FunExp("y", BinOp(Mult, Var "x", Var "y")), ref env)
-           | Lt -> ProcV("x", FunExp("y", BinOp(Lt, Var "x", Var "y")), ref env)
-           | LogAnd -> ProcV("x", FunExp("y", BinOp(LogAnd, Var "x", Var "y")), ref env)
-           | LogOr -> ProcV("x", FunExp("y", BinOp(LogOr, Var "x", Var "y")), ref env))
+          ProcV("x", FunExp("y", BinOp(op, Var "x", Var "y")), ref env)
   | ErrorExp x -> err (x)
 
 let eval_decl env = function
