@@ -83,7 +83,7 @@ AExpr :
 InfixExpr :
     LPAREN PLUS RPAREN { InfixExp (Plus) }
   | LPAREN MULT RPAREN { InfixExp (Mult) }
-  | LPAREN Lt RPAREN { InfixExp (Lt) }
+  | LPAREN LT RPAREN { InfixExp (Lt) }
   | LPAREN LOGAND RPAREN { InfixExp (LogAnd) }
   | LPAREN LOGOR RPAREN { InfixExp (LogOr) }
 
