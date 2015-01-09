@@ -61,14 +61,27 @@ val - = 9
 １つ目の入力ではまずxに2を割り当て、関数addxでは１つの引数を取りその引数と先に宣言したxの和を返す。結果として4+2が評価されて6が返っている。  
 ２つ目の入力では、関数fは引数の累乗を返し、gは２つの引数を取り２つ目の引数を１つ目の引数の関数に適用する。結果として`g f 3`は3の累乗を返し、確かに高階関数が正しく動作している。  
 ## Exercise 3.9(⋆⋆)
+中置演算子用の構文をparser.mlyに追加し、eval.mlにInfixExp用のパターンマッチを追加する。  
+InfixExpにマッチした時、それぞれの演算子は`fun x -> fun y -> x op y`の構文木を返す。  
+- 実行例 
+
+```
+$ ./miniml
+# let threetimes = fun f -> fun x -> f (f x x) (f x x) in threetimes (+) 5;;
+val - = 20
+# let f = (+) in f 3 5;;
+val - = 8
+```
 
 ## Exercise 3.10(⋆)
+
 ## Exercise 3.11(⋆)
 
-let makemult = fun maker -> fun x -> fun n -> if x < 1 then 0 else n + maker maker (x + -1) n
-let timesn = fun x -> fun n -> makemult makemult x n
-let rec fact = fun n -> if n < 1 then 1 else timesn (fact (n+-1)) n in fact 5;;
-
+```
+# let makemult = fun maker -> fun x -> fun n -> if x < 1 then 0 else n + maker maker (x + -1) n  
+# let timesn = fun x -> fun n -> makemult makemult x n  
+# let rec fact = fun n -> if n < 1 then 1 else timesn (fact (n+-1)) n in fact 5;;  
+```
 
 ## Exercise 3.14(必修課題)
 
