@@ -74,14 +74,32 @@ val - = 8
 ```
 
 ## Exercise 3.10(⋆)
+`fun x1 ... xn -> ...`のサポートのためにfunの引数を複数個持たせるようにparser.mlyを変更した。引数部分を解析する構文をFunExprArgumentListとし、この構文を繰り返し引数分だけ消費する。  
+`let f x1 ... xn -= ...`のサポートのために先と同じような構文をparser.mlyに追加した。こちらもLetExprArgumentListとして出現したIDをFunExpの第一引数としてつなげていく。  
+- 実行例
 
+```
+$ ./miniml
+# (fun x y z -> x * y * z) 1 2 3;;
+val - = 6
+# let f x y z = x + y + z;;
+val f = fun
+# f 1 2 3;;
+val - = 6
+```
+
+`fun x y z -> x * y * z` は `FunExp(x, FunExp(y, FunExp(z, Expr)))` といった構文木を生成する。  
+`let f x y z = x + y + z` は `Decl(f, FunExp(x, FunExp(y, FunExp(z, Expr))))` といった構文木を生成する。
 ## Exercise 3.11(⋆)
+階乗を計算するプログラムは以下である。
 
 ```
-# let makemult = fun maker -> fun x -> fun n -> if x < 1 then 0 else n + maker maker (x + -1) n  
-# let timesn = fun x -> fun n -> makemult makemult x n  
-# let rec fact = fun n -> if n < 1 then 1 else timesn (fact (n+-1)) n in fact 5;;  
+# let makemult = fun maker -> fun x -> fun n -> if x < 1 then 0 else n + maker maker (x + -1) n;;
+# let timesn = fun x -> fun n -> makemult makemult x n;;
+# let rec fact = fun n -> if n < 2 then 1 else timesn (fact (n+-1)) n in fact 5;;  
+val - = 120
 ```
 
+timesnは２つの引数をとって`x * n`を計算する。これを使って、`fact(1) * fact(2) * ...`を計算する。
 ## Exercise 3.14(必修課題)
 
