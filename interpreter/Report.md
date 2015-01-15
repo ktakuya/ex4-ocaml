@@ -31,6 +31,16 @@ val - = 10
 parser.mlyには構文としてLOGExprの構文を追加、それぞれBinOpを生成する。  
 syntax.mlにはbinOpの型としてLogAndとLogOrを追加する。  
 eval.mlではapply_primのパターンマッチにLogAndとLogOrを追加する。また２つの引数はともにブーリアン型の必要がある。  
+- 実行例
+
+```
+$ ./miniml
+# if true && false then 1 else 2;;
+val - = 2
+# if true || false then 1 else 2;;
+val - = 1
+```
+
 
 
 ## Exercise 3.4(必修課題)
@@ -102,4 +112,15 @@ val - = 120
 
 timesnは２つの引数をとって`x * n`を計算する。これを使って、`fact(1) * fact(2) * ...`を計算する。
 ## Exercise 3.14(必修課題)
+syntax.mlにLetRecExpとRecDeclを追加し、parser.mlyに再帰的関数定義の構文を追加。さらにeval.mlにLetRecExpとRecDeclの評価するパターンを追加した。
+- 実行例
 
+```
+$ ./miniml
+# let rec fact = fun n -> if n < 2 then 1 else n * (fact (n + -1));;
+val fact = fun
+# fact 5;;
+val - = 120
+# let rec fib n = fun n -> if n < 3 then 1 else (fib (n+-1)) + (fib (n+-2)) in fib 9;;
+val - = 34
+```
