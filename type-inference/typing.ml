@@ -58,15 +58,40 @@ let ty_decl tyenv = function
     Exp e -> ty_exp tyenv e
   | _ -> err ("Not Implemented!")
 
-let rec resolve_type s = function
-    TyVar (var) ->
-      (let i, v = s in
-      if i = var then v else (TyVar var))
-  | TyFun (ty1, ty2) ->
-      (TyFun ((resolve_type s ty1), (resolve_type s ty2)))
-  | a -> a
-
+(*
+  subst_type : subst(aka (tyvar * ty) list) -> ty -> ty
+*)
 let rec subst_type s ty =
+    let rec resolve_type s = function
+        TyVar (var) ->
+          (let i, v = s in
+           if i = var then v else (TyVar var))
+      | TyFun (ty1, ty2) -> (TyFun ((resolve_type s ty1), (resolve_type s ty2)))
+      | a -> a in
     match s with
       [] -> ty
     | hd :: tl -> subst_type tl (resolve_type hd ty)
+
+(*
+  subst_ty_list : subst -> (ty * ty) list -> (ty * ty) list
+*)
+let rec subst_ty_list s = function
+    [] -> []
+  | (ty1, ty2)::r -> ((subst_type s ty1), (subst_type s ty2)) :: subst_ty_list s r
+;;
+
+(*
+  unify : (ty * ty) list -> subst(aka (tyvar * ty) list)
+*)
+let rec unify = function
+    [] -> []
+  | (TyInt, TyInt)::r | (TyBool, TyBool)::r-> unify r
+  | (TyVar v, ty)::r | (ty, TyVar v)::r ->
+      (if MySet.member v (freevar_ty ty) then
+        err ("Type Error")
+      else
+        (v, ty) :: unify (subst_ty_list [(v, ty)] r))
+  | (TyFun (ty11, ty12), TyFun (ty21, ty22))::r ->
+      unify ((ty11, ty21) :: (ty12, ty22) :: r)
+  | _ -> err ("Type Error")
+;;
