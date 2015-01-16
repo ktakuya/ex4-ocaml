@@ -85,7 +85,12 @@ let rec subst_ty_list s = function
 *)
 let rec unify = function
     [] -> []
-  | (TyInt, TyInt)::r | (TyBool, TyBool)::r-> unify r
+  | (TyInt, TyInt)::r | (TyBool, TyBool)::r -> unify r
+  | (TyVar v1, TyVar v2)::r ->
+      (if v1 = v2 then
+        unify r
+      else
+        (v1, TyVar v2)::unify (subst_ty_list [(v1, TyVar v2)] r))
   | (TyVar v, ty)::r | (ty, TyVar v)::r ->
       (if MySet.member v (freevar_ty ty) then
         err ("Type Error")
