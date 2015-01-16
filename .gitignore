@@ -19,3 +19,7 @@ parser.output
 lexer.ml
 miniml
 
+### OUnit
+*.cache
+*.log
+
