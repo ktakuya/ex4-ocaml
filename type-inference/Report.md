@@ -16,4 +16,5 @@ val - : int = 7
 # Exercise 4.3(必修課題)
 # Exercise 4.4(必修課題)
 # Exercise 4.5(必修課題)
+例えば、 `(TyVar 'a', TyFun (TyBool, TyVar 'a'))` について考えた時、'a'にどのような型を割り当てたとしても一致することはないため。
 # Exercise 4.6(必修課題)
