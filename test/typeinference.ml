@@ -1,5 +1,6 @@
 open OUnit2
 open Syntax
+open List
 
 let ex4_1 =
     let x = 3 in
@@ -36,8 +37,21 @@ let ex4_3 =
      "test3">:: test3;]
 ;;
 
-let _ =
+let ex4_4 =
+    let alpha = fresh_tyvar() in
+    let beta = fresh_tyvar() in
+    let a = Typing.unify [(TyFun (TyVar alpha, TyBool), TyFun (TyFun (TyInt, TyVar beta), TyVar beta))] in
+    let b = Typing.unify [(TyVar alpha, TyVar beta)] in
+    let test1 _ = assert_equal a ([(alpha, TyFun (TyInt, TyVar beta))] @ [(beta, TyBool)]) in
+    let test2 _ = assert_equal b ([(alpha, TyVar beta)]) in
+    "ex4_4">:::
+    ["test1">:: test1;
+     "test2">:: test2;]
+;;
+
+let () =
     run_test_tt_main ex4_1;
     run_test_tt_main ex4_2;
     run_test_tt_main ex4_3;
+    run_test_tt_main ex4_4;
 ;;
