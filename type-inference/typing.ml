@@ -91,8 +91,7 @@ let rec ty_exp tyenv = function
   | LetExp (id, exp1, exp2) ->
         let (s1, ty1) = ty_exp tyenv exp1 in
         let (s2, ty2) = ty_exp (Environment.extend id ty1 tyenv) exp2 in
-        let domty = TyVar (fresh_tyvar ()) in
-        let eqs = [(domty, ty1)] @ (eqs_of_subst s1) @ (eqs_of_subst s2) in
+        let eqs = (eqs_of_subst s1) @ (eqs_of_subst s2) in
         let s3 = unify eqs in (s3, subst_type s3 ty2)
   | FunExp (id, exp) ->
         let domty = TyVar (fresh_tyvar ()) in
