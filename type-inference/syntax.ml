@@ -29,7 +29,7 @@ type ty =
   | TyVar of tyvar
   | TyFun of ty * ty
 
-let rec pp_ty ty =
+let rec pp_ty_string ty =
   let memo = ref [] in
   let get_num v =
     let rec body l cnt =
@@ -38,14 +38,18 @@ let rec pp_ty ty =
       | hd :: tl -> if v = hd then cnt else body tl (cnt + 1)
   in body !memo 0 in
   let rec inner_print_ty = function
-    TyInt -> print_string "int"
-  | TyBool -> print_string "bool"
-  | TyVar (var) -> print_string ("`" ^ (Char.escaped (char_of_int ((int_of_char 'a') + (get_num var)))))
+    TyInt -> "int"
+  | TyBool -> "bool"
+  | TyVar (var) -> "'" ^ (Char.escaped (char_of_int ((int_of_char 'a') + (get_num var))))
   | TyFun (ty1, ty2) -> 
+      let s1 = inner_print_ty ty1 in
+      let s2 = inner_print_ty ty2 in
       (match ty1 with
-        TyFun (_, _) -> print_string "("; inner_print_ty ty1; print_string ") -> "; inner_print_ty ty2;
-      | _ -> inner_print_ty ty1; print_string " -> "; inner_print_ty ty2;)
+        TyFun (_, _) ->  "(" ^ s1 ^ ") -> " ^ s2
+      | _ -> s1 ^ " -> " ^ s2)
   in inner_print_ty ty
+
+let pp_ty ty = print_string (pp_ty_string ty)
 
 let fresh_tyvar =
   let counter = ref 0 in
