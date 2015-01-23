@@ -81,20 +81,29 @@ let rec ty_exp tyenv = function
         let (eqs3, ty) = ty_prim op ty1 ty2 in
         let eqs = (eqs_of_subst s1) @ (eqs_of_subst s2) @ eqs3 in
         let s3 = unify eqs in (s3, subst_type s3 ty)
-  (* | IfExp (exp1, exp2, exp3) -> 
-        let tycond = ty_exp tyenv exp1 in
-        let tyarg1 = ty_exp tyenv exp2 in
-        let tyarg2 = ty_exp tyenv exp3 in
-            (match tycond with
-                TyBool -> (match tyarg1, tyarg2 with
-                            TyInt, TyInt -> TyInt
-                          | TyBool, TyBool -> TyBool
-                          | TyInt, TyBool -> err ("This expression has type bool but an expression was expected of type int")
-                          | TyBool, TyInt -> err ("Error: This expression has type int but an expression was expected of type bool"))
-              | _ -> err("Syntax Error"))
+  | IfExp (exp1, exp2, exp3) -> 
+        let (scond, tycond) = ty_exp tyenv exp1 in
+        let (s1, ty1) = ty_exp tyenv exp2 in
+        let (s2, ty2) = ty_exp tyenv exp3 in
+        let eqs = [(tycond, TyBool)] @ (eqs_of_subst scond) @ (eqs_of_subst s1) @
+                    (eqs_of_subst s2) @ [(ty1, ty2)] in
+        let s3 = unify eqs in (s3, subst_type s3 ty1)
   | LetExp (id, exp1, exp2) ->
-        let tyarg1 = ty_exp tyenv exp1 in
-            ty_exp (Environment.extend id tyarg1 tyenv) exp2 *)
+        let (s1, ty1) = ty_exp tyenv exp1 in
+        let (s2, ty2) = ty_exp (Environment.extend id ty1 tyenv) exp2 in
+        let domty = TyVar (fresh_tyvar ()) in
+        let eqs = [(domty, ty1)] @ (eqs_of_subst s1) @ (eqs_of_subst s2) in
+        let s3 = unify eqs in (s3, subst_type s3 ty2)
+  | FunExp (id, exp) ->
+        let domty = TyVar (fresh_tyvar ()) in
+        let s, ranty = ty_exp (Environment.extend id domty tyenv) exp in
+          (s, TyFun (subst_type s domty, ranty))
+  | AppExp (exp1, exp2) ->
+        let (s1, ty1) = ty_exp tyenv exp1 in
+        let (s2, ty2) = ty_exp tyenv exp2 in
+        let domty = TyVar (fresh_tyvar ()) in
+        let eqs = [(ty1, TyFun (ty2, domty))] @ (eqs_of_subst s1) @ (eqs_of_subst s2) in
+        let s3 = unify eqs in (s3, subst_type s3 domty)
   | _ -> err ("Not Implemented!")
 
 
