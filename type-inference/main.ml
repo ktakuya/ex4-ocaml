@@ -6,7 +6,7 @@ let rec read_eval_print env tyenv =
   print_string "# ";
   flush stdout;
   let decl = Parser.toplevel Lexer.main (Lexing.from_channel stdin) in
-  let ty = ty_decl tyenv decl in
+  let (s, ty) = ty_decl tyenv decl in
   let (id, newenv, v) = (try eval_decl env decl with Failure "error" -> read_eval_print env tyenv) in
     Printf.printf "val %s : " id;
     pp_ty ty;
