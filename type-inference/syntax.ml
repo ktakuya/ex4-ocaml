@@ -32,8 +32,11 @@ type ty =
 let rec pp_ty = function
     TyInt -> print_string "int"
   | TyBool -> print_string "bool"
-  | TyVar (var) -> print_string "`a"
-  | TyFun (ty1, ty2) -> pp_ty ty1; print_string " -> "; pp_ty ty2
+  | TyVar (var) -> print_string (Printf.sprintf "'%c" (char_of_int ((int_of_char 'a') + var)))
+  | TyFun (ty1, ty2) -> 
+      (match ty1 with
+        TyFun (_, _) -> print_string "("; pp_ty ty1; print_string ") -> "; pp_ty ty2;
+      | _ -> pp_ty ty1; print_string " -> "; pp_ty ty2;)
 
 let fresh_tyvar =
   let counter = ref 0 in
